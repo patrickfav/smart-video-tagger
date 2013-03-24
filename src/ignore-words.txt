@@ -59,3 +59,4 @@ hdrip
 rencode
 dvdscr
 ger
+rerip

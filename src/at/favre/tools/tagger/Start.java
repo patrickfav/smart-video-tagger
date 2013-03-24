@@ -20,9 +20,9 @@ public class Start {
 
 
 	public static void main(String[] args) {
-		Path path = FileSystems.getDefault().getPath("H:\\== MOVIES ==");
+		Path path = FileSystems.getDefault().getPath("H:\\== SERIES ==");
 
-		ScannerConfig config = new ScannerConfig(EContainedTypes.MOVIES,true,true);
+		ScannerConfig config = new ScannerConfig(EContainedTypes.MIXED,true,true);
 
 		try {
 			VideoFileVisitor visitor = new VideoFileVisitor(config);

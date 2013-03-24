@@ -1,10 +1,8 @@
 package at.favre.tools.tagger.analyzer;
 
-import at.favre.tools.tagger.analyzer.matcher.DateAnalyzer;
-import at.favre.tools.tagger.analyzer.matcher.SeasonEpisodeAnalyser;
-import at.favre.tools.tagger.analyzer.matcher.SeasonEpisodePatternType;
-import at.favre.tools.tagger.analyzer.matcher.TitleAnalyser;
+import at.favre.tools.tagger.analyzer.matcher.*;
 import at.favre.tools.tagger.analyzer.metadata.FileMetaData;
+import at.favre.tools.tagger.analyzer.metadata.FolderMetaData;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -36,17 +34,20 @@ public class FileNameAnalyser {
 		}
 	}
 
-	public FileMetaData analyzeFile(String fileName) {
+	public FileMetaData analyzeFile(String fileName,FolderMetaData parentFolderMetaData) {
 		FileMetaData fileMetaData = new FileMetaData(fileName);
-		if(config.getContainedTypes().equals(EContainedTypes.MIXED) || config.getContainedTypes().equals(EContainedTypes.SERIES)) {
-			fileMetaData = analyseSeasonEpisodeData(fileMetaData);
-		} else {
-			fileMetaData.setType(EVideoType.MOVIE);
-		}
+		fileMetaData.setFolder(parentFolderMetaData);
 
 		fileMetaData = analyseTitle(fileMetaData);
 		fileMetaData = analyseYearDate(fileMetaData);
 
+		if(config.getContainedTypes().equals(EContainedTypes.MIXED) || config.getContainedTypes().equals(EContainedTypes.SERIES)) {
+			fileMetaData = analyseSeasonEpisodeData(fileMetaData);
+			fileMetaData = PathAnalyzer.analyze(fileMetaData);
+		} else {
+			fileMetaData.setType(EVideoType.MOVIE);
+		}
+		
 		log.debug(fileMetaData);
 
 		return fileMetaData;

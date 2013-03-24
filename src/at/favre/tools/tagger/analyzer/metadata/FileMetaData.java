@@ -17,6 +17,7 @@ public class FileMetaData {
 	private FolderMetaData folder;
 
 	private String titleChunks = "";
+	private String guessedTitle = "";
 	private int year = INVALID;
 
 	private SeriesData seriesData;
@@ -68,6 +69,15 @@ public class FileMetaData {
 		this.year = year;
 	}
 
+	public String getGuessedTitle() {
+		return guessedTitle;
+	}
+
+	public void setGuessedTitle(String guessedTitle) {
+		this.guessedTitle = guessedTitle;
+	}
+
+
 	public String getPureFileName() {
 		File file = new File(originalFullPath);
 		return stripExtension(file.getName());
@@ -93,6 +103,10 @@ public class FileMetaData {
 
 		if(year != INVALID) {
 			sb.append(" ("+year+")");
+		}
+
+		if(guessedTitle.length() > 0) {
+			sb.append(" [guessed: "+guessedTitle+"]");
 		}
 
 		if(VERBOSE_LOG) {

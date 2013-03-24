@@ -62,8 +62,9 @@ public class TitleAnalyser {
 	}
 
 	private static String removeNonWords(String s) {
-		s = s.replaceAll("[^\\w\\d][^\\s]+\\w*","");
-		s = s.replaceAll("^\\w+([0-9]|-)+\\w*","");
+		s = s.replaceAll("[^\\w\\d][^\\s]+\\w*",""); //start with special char
+		s = s.replaceAll("^\\D+([0-9]|-)+\\w*",""); //start with letter but has digits
+		s = s.replaceAll("^\\d+\\D+(\\d|\\D)*",""); //start with digit but has letter
 		return s;
 	}
 

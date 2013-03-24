@@ -53,8 +53,8 @@ public class VideoFileVisitor extends SimpleFileVisitor<Path> {
 		//log.trace("visiting file "+file+ " with extension "+getFileExtension(file.toString()));
 		if(attr.isRegularFile() && hasCorrectExtension(getFileExtension(file.toString()))) {
 			sumFileVisited++;
-			FileMetaData fileMetaData = analyser.analyzeFile(file.toString());
-			fileMetaData.setFolder(folderMetaData);
+			FileMetaData fileMetaData = analyser.analyzeFile(file.toString(),folderMetaData);
+
 			folderMetaData.addFile(fileMetaData);
 
 			if(fileMetaData.getSeriesData().isCouldReadSeasonEpisodeData()) {
