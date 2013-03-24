@@ -2,6 +2,7 @@ package at.favre.tools.tagger.system;
 
 import at.favre.tools.tagger.io.filereader.TextFileReader;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,7 +13,7 @@ public class ConfigManager {
 	private static ConfigManager ourInstance = new ConfigManager();
 
 	private final List<String> extensions;
-	private final List<String> ignoreWords;
+	private final List<FilterWord> ignoreWords;
 
 	public static ConfigManager getInstance() {
 		return ourInstance;
@@ -27,15 +28,26 @@ public class ConfigManager {
 		return new TextFileReader("/extensions.txt").getAllItemsInTextFile();
 	}
 
-	private List<String> readIgnoreWords() {
-		return new TextFileReader("/ignore-words.txt").getAllItemsInTextFile();
+	private List<FilterWord> readIgnoreWords() {
+		List<FilterWord> ignoreWordList = new ArrayList<FilterWord>();
+		List<String> list =  new TextFileReader("/ignore-words.txt").getAllItemsInTextFile();
+
+		for(String ignoreWord:list) {
+			if(ignoreWord.startsWith("\"") && ignoreWord.endsWith("\"")) {
+				ignoreWordList.add(new FilterWord(ignoreWord.substring(1,ignoreWord.length()-1), FilterWord.CaseSensitivity.KEEP_CASE));
+			} else {
+				ignoreWordList.add(new FilterWord(ignoreWord, FilterWord.CaseSensitivity.IGNORE_CASE));
+			}
+		}
+
+		return ignoreWordList;
 	}
 
 	public List<String> getExtensions() {
 		return extensions;
 	}
 
-	public List<String> getIgnoreWords() {
+	public List<FilterWord> getIgnoreWords() {
 		return ignoreWords;
 	}
 }

@@ -1,6 +1,7 @@
 package at.favre.tools.tagger.analyzer.matcher;
 
 import at.favre.tools.tagger.system.ConfigManager;
+import at.favre.tools.tagger.system.FilterWord;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,13 +14,23 @@ import java.util.List;
 public class TitleAnalyser {
 
 	public static List<String> analyseTitle(String fileName) {
-		String s = removeWhiteSpaceSubstitutes(fileName+" ");
-		s=removeIgnoreWords(s);
-		s=removeNonWords(s);
-		s=removeBrackets(s);
-		s=removeSpecialChars(s);
+		String s = removeBrackets(fileName);
+		s = removeWhiteSpaceSubstitutes(s);
 
-		return tryToExtractTitleFromChunks(Arrays.asList(s.split(" ")));
+		List<String> chunkList = new ArrayList<String>();
+		for(String chunk : Arrays.asList(s.split(" "))) {
+			chunk=removeIgnoreWords(chunk);
+			chunk=removeNonWords(chunk);
+			chunk=removeSpecialChars(chunk);
+			chunk.trim();
+
+			if(chunk.length() > 0) {
+				chunkList.add(chunk);
+			}
+		}
+
+
+		return chunkList;
 	}
 
 	private static String removeWhiteSpaceSubstitutes(String s) {
@@ -30,8 +41,12 @@ public class TitleAnalyser {
 	}
 
 	private static String removeIgnoreWords(String s) {
-		for(String ignoreWord : ConfigManager.getInstance().getIgnoreWords()) {
-			s = s.replaceAll("(?i)\\s" + ignoreWord+"\\s", " ");
+		for(FilterWord ignoreWord : ConfigManager.getInstance().getIgnoreWords()) {
+			if(ignoreWord.isIgnoreCase() && s.matches("(?i)"+ignoreWord.getWord())) {
+				return "";
+			} else if(s.matches(ignoreWord.getWord())){
+				return "";
+			}
 		}
 		return s;
 	}
@@ -45,7 +60,7 @@ public class TitleAnalyser {
 	}
 
 	private static String removeNonWords(String s) {
-		s = s.replaceAll("\\s\\W[^\\s]+\\w*","");
+		s = s.replaceAll("\\W[^\\s]+\\w*","");
 		s = s.replaceAll("\\w+([0-9]|-)+\\w*","");
 		return s;
 	}

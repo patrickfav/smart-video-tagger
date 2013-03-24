@@ -52,7 +52,7 @@ public class FileNameAnalyser {
 			sb.append(s+" ");
 		}
 
-		log.debug("Title Chunks: "+sb.toString()+" from "+fileName);
+		log.debug("Title Chunks: "+sb.toString()+"||ORIGINAL|| "+fileName);
 
 		metaData.setTitle(sb.toString());
 

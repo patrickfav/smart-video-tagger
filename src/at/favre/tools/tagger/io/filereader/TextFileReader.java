@@ -10,6 +10,7 @@ import java.util.List;
  * @since 23.03.13
  */
 public class TextFileReader {
+	private static final String COMMENT_LINE = "#";
 	public String pathToTextFile;
 
 	public TextFileReader(String pathToTextFile) {
@@ -35,7 +36,8 @@ public class TextFileReader {
 		String line = null;
 		try {
 			while ((line = reader.readLine()) != null) {
-				lines.add(line);
+				if(!line.startsWith(COMMENT_LINE))
+					lines.add(line.replaceAll("\\#","#"));
 			}
 		} catch (IOException e) {
 			throw new RuntimeException("IO Exception while reading the line",e);

@@ -1,11 +1,12 @@
 dvdrip
-xvid
+xvid.*
 divx
 h264
 x264
 topaz
 hdtv
-tvu.org.ru
+hdtv-+.*
+tvu
 dvd
 2dvd
 720p
@@ -28,6 +29,7 @@ repack
 avi
 dsr
 preair
+preair-+.*
 german
 ws
 subtitle
@@ -35,3 +37,6 @@ subtitles
 notv
 hebsub
 HDTVRip
+"US"
+real-.*
+ffn
