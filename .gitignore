@@ -1,0 +1,9 @@
+*.class
+
+/.idea/workspace.xml
+/out
+/bin
+
+# Package Files #
+*.war
+*.ear
