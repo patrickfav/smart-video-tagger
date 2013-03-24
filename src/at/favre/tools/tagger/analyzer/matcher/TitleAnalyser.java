@@ -6,6 +6,7 @@ import at.favre.tools.tagger.system.FilterWord;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * @author PatrickF
@@ -22,7 +23,8 @@ public class TitleAnalyser {
 			chunk=removeIgnoreWords(chunk);
 			chunk=removeNonWords(chunk);
 			chunk=removeSpecialChars(chunk);
-			chunk.trim();
+			chunk=chunk.trim();
+			chunk=chunk.toLowerCase(Locale.US);
 
 			if(chunk.length() > 0) {
 				chunkList.add(chunk);
@@ -33,7 +35,7 @@ public class TitleAnalyser {
 		return chunkList;
 	}
 
-	private static String removeWhiteSpaceSubstitutes(String s) {
+	public static String removeWhiteSpaceSubstitutes(String s) {
 		s = s.replaceAll("_"," ");
 		s = s.replaceAll("\\."," ");
 		s = s.replaceAll("%20"," ");
@@ -42,7 +44,7 @@ public class TitleAnalyser {
 
 	private static String removeIgnoreWords(String s) {
 		for(FilterWord ignoreWord : ConfigManager.getInstance().getIgnoreWords()) {
-			if(ignoreWord.isIgnoreCase() && s.matches("(?i)"+ignoreWord.getWord())) {
+			if(ignoreWord.isIgnoreCase() && s.matches("(?i)" + ignoreWord.getWord())) {
 				return "";
 			} else if(s.matches(ignoreWord.getWord())){
 				return "";
@@ -60,8 +62,8 @@ public class TitleAnalyser {
 	}
 
 	private static String removeNonWords(String s) {
-		s = s.replaceAll("\\W[^\\s]+\\w*","");
-		s = s.replaceAll("\\w+([0-9]|-)+\\w*","");
+		s = s.replaceAll("[^\\w\\d][^\\s]+\\w*","");
+		s = s.replaceAll("^\\w+([0-9]|-)+\\w*","");
 		return s;
 	}
 

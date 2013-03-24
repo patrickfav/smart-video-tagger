@@ -1,12 +1,13 @@
 package at.favre.tools.tagger.analyzer;
 
+import at.favre.tools.tagger.analyzer.matcher.DateAnalyzer;
 import at.favre.tools.tagger.analyzer.matcher.SeasonEpisodeAnalyser;
 import at.favre.tools.tagger.analyzer.matcher.SeasonEpisodePatternType;
 import at.favre.tools.tagger.analyzer.matcher.TitleAnalyser;
+import at.favre.tools.tagger.analyzer.metadata.FileMetaData;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,8 +21,10 @@ public class FileNameAnalyser {
 
 	private Logger log = LogManager.getLogger(this.getClass().getSimpleName());
 	private List<SeasonEpisodeAnalyser> seasonEpisodeAnalyzers;
+	private ScannerConfig config;
 
-	public FileNameAnalyser() {
+	public FileNameAnalyser(ScannerConfig config) {
+		this.config = config;
 		constructSeasonEpisodeAnalyzers();
 	}
 
@@ -33,33 +36,38 @@ public class FileNameAnalyser {
 		}
 	}
 
-	public MetaData analyzeFile(String fileName) {
-		MetaData metaData = new MetaData();
-		File file = new File(fileName);
-		String pureFileName = stripExtension(file.getName());
+	public FileMetaData analyzeFile(String fileName) {
+		FileMetaData fileMetaData = new FileMetaData(fileName);
+		if(config.getContainedTypes().equals(EContainedTypes.MIXED) || config.getContainedTypes().equals(EContainedTypes.SERIES)) {
+			fileMetaData = analyseSeasonEpisodeData(fileMetaData);
+		} else {
+			fileMetaData.setType(EVideoType.MOVIE);
+		}
 
-		metaData = analyseSeasonEpisodeData(pureFileName,metaData);
-		metaData = analyseTitle(pureFileName,metaData);
+		fileMetaData = analyseTitle(fileMetaData);
+		fileMetaData = analyseYearDate(fileMetaData);
 
-		return metaData;
+		log.debug(fileMetaData);
+
+		return fileMetaData;
 	}
 
-	private MetaData analyseTitle(String fileName, MetaData metaData) {
-		List<String> titleChunks = TitleAnalyser.analyseTitle(fileName);
+	private FileMetaData analyseTitle(FileMetaData fileMetaData) {
+		List<String> titleChunks = TitleAnalyser.analyseTitle(fileMetaData.getPureFileName());
 
 		StringBuilder sb = new StringBuilder();
 		for(String s: titleChunks) {
 			sb.append(s+" ");
 		}
 
-		log.debug("Title Chunks: "+sb.toString()+"||ORIGINAL|| "+fileName);
+		fileMetaData.setTitleChunks(sb.toString());
 
-		metaData.setTitle(sb.toString());
-
-		return metaData;
+		return fileMetaData;
 	}
 
-	private MetaData analyseSeasonEpisodeData(String fileName,MetaData metaData) {
+	private FileMetaData analyseSeasonEpisodeData(FileMetaData fileMetaData) {
+		String fileName = fileMetaData.getPureFileName();
+
 		for(SeasonEpisodeAnalyser analyser :seasonEpisodeAnalyzers) {
 			analyser.setSourceString(fileName);
 			if(analyser.containsPattern()) {
@@ -70,23 +78,23 @@ public class FileNameAnalyser {
 				} else {
 					//log.debug(fileName+" has been analyzed and "+analyser.getType()+" has found a match" +
 					//		" with season "+analyser.getSeasonNumber()+" and episode "+analyser.getEpisodeNumber());
-					metaData.setSeason(analyser.getSeasonNumber());
-					metaData.setEpisode(analyser.getEpisodeNumber());
-					metaData.setCouldReadSeasonEpisodeData(true);
+					fileMetaData.getSeriesData().setSeason(analyser.getSeasonNumber());
+					fileMetaData.getSeriesData().setEpisode(analyser.getEpisodeNumber());
+					fileMetaData.getSeriesData().setCouldReadSeasonEpisodeData(true);
+					fileMetaData.setType(EVideoType.SERIES);
 				}
 			}
 		}
-		return metaData;
+		return fileMetaData;
 	}
 
-	private static String stripExtension(String fileName) {
-		int lastIndexOfPoint = fileName.lastIndexOf('.');
-
-		if(lastIndexOfPoint != -1) {
-			return fileName.substring(0,lastIndexOfPoint);
+	private FileMetaData analyseYearDate(FileMetaData fileMetaData) {
+		String fileName = fileMetaData.getPureFileName();
+		int year;
+		if((year = DateAnalyzer.analyse(fileName)) > 0) {
+			fileMetaData.setYear(year);
 		}
-		return fileName;
+
+		return fileMetaData;
 	}
-
-
 }

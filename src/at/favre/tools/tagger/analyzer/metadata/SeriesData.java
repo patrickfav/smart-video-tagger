@@ -1,43 +1,17 @@
-package at.favre.tools.tagger.analyzer;
-
-import java.util.Date;
+package at.favre.tools.tagger.analyzer.metadata;
 
 /**
  * @author PatrickF
- * @since 23.03.13
+ * @since 24.03.13
  */
-public class MetaData {
-	private VideoType type;
-	private String title;
-	private Date release;
-	private int season;
-	private int episode;
-	private String episodeTitle;
+public class SeriesData {
+	public static final int INVALID = -1;
+
+	private int season = INVALID;
+	private int episode = INVALID;
+	private String episodeTitle="";
 	private boolean couldReadSeasonEpisodeData = false;
 
-	public VideoType getType() {
-		return type;
-	}
-
-	public void setType(VideoType type) {
-		this.type = type;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public Date getRelease() {
-		return release;
-	}
-
-	public void setRelease(Date release) {
-		this.release = release;
-	}
 
 	public int getSeason() {
 		return season;
