@@ -1,4 +1,4 @@
-package at.favre.tools.tagger.analyzer;
+package at.favre.tools.tagger.analyzer.metadata;
 
 /**
  * @author PatrickF

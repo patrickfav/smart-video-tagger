@@ -1,4 +1,4 @@
-package at.favre.tools.tagger.analyzer.matcher;
+package at.favre.tools.tagger.analyzer;
 
 import at.favre.tools.tagger.system.ConfigManager;
 import at.favre.tools.tagger.system.FilterWord;
@@ -12,9 +12,9 @@ import java.util.Locale;
  * @author PatrickF
  * @since 24.03.13
  */
-public class TitleAnalyser {
+public class TitleCleaner {
 
-	public static List<String> analyseTitle(String fileName) {
+	public static String cleanTitle(String fileName) {
 		String s = removeBrackets(fileName);
 		s = removeWhiteSpaceSubstitutes(s);
 
@@ -31,8 +31,12 @@ public class TitleAnalyser {
 			}
 		}
 
+		StringBuilder sb = new StringBuilder();
+		for(String part: chunkList) {
+			sb.append(part+" ");
+		}
 
-		return chunkList;
+		return sb.toString();
 	}
 
 	public static String removeWhiteSpaceSubstitutes(String s) {

@@ -1,6 +1,7 @@
 package at.favre.tools.tagger;
 
 import at.favre.tools.tagger.analyzer.EContainedTypes;
+import at.favre.tools.tagger.analyzer.FileNameAnalyser;
 import at.favre.tools.tagger.analyzer.ScannerConfig;
 import at.favre.tools.tagger.io.VideoFileVisitor;
 import org.apache.log4j.LogManager;
@@ -18,21 +19,21 @@ import java.nio.file.Path;
 public class Start {
 	private static Logger log = LogManager.getLogger(Start.class.getSimpleName());
 
-
 	public static void main(String[] args) {
 		Path path = FileSystems.getDefault().getPath("H:\\== SERIES ==");
 
 		ScannerConfig config = new ScannerConfig(EContainedTypes.MIXED,true,true);
 
+		VideoFileVisitor visitor = new VideoFileVisitor(config);
+
 		try {
-			VideoFileVisitor visitor = new VideoFileVisitor(config);
 			Files.walkFileTree(path, visitor);
-			log.info("Found files "+visitor.getSumFileVisited()+", recognized "+visitor.getSumRecognizedFiles());
+			log.info("Found files "+visitor.getSumFileVisited());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-
-
+		FileNameAnalyser analyzer = new FileNameAnalyser(visitor.getRoot());
+		analyzer.analyzeAll();
 	}
 }

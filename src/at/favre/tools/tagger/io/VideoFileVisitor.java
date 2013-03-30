@@ -3,7 +3,7 @@ package at.favre.tools.tagger.io;
 import at.favre.tools.tagger.analyzer.FileNameAnalyser;
 import at.favre.tools.tagger.analyzer.ScannerConfig;
 import at.favre.tools.tagger.analyzer.metadata.FileMetaData;
-import at.favre.tools.tagger.analyzer.metadata.FolderMetaData;
+import at.favre.tools.tagger.analyzer.metadata.FolderInfo;
 import at.favre.tools.tagger.system.ConfigManager;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -23,28 +23,26 @@ public class VideoFileVisitor extends SimpleFileVisitor<Path> {
 
 	private FileNameAnalyser analyser;
 	private int sumFileVisited;
-	private int sumRecognizedFiles;
-	private FolderMetaData folderMetaData;
+	private FolderInfo folderInfo;
+	private FolderInfo refFolder;
 
 	public VideoFileVisitor(ScannerConfig config) {
-		analyser = new FileNameAnalyser(config);
+		//analyser = new FileNameAnalyser(config);
 	}
 
-	/**
-	 * Invoked for a directory before entries in the directory are visited.
-	 * <p/>
-	 * <p> Unless overridden, this method returns {@link java.nio.file.FileVisitResult#CONTINUE
-	 * CONTINUE}.
-	 */
 	@Override
 	public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-		FolderMetaData newFolder = new FolderMetaData(folderMetaData,dir.toFile().getName());
+		FolderInfo newFolder = new FolderInfo(folderInfo,dir.toFile().getName());
 
-		if(folderMetaData != null) {
-			folderMetaData.addChildFolder(newFolder);
+		if(folderInfo != null) {
+			folderInfo.addChildFolder(newFolder);
 		}
 
-		folderMetaData = newFolder;
+		folderInfo = newFolder;
+
+		if(refFolder == null)
+			refFolder =newFolder;
+
 		return super.preVisitDirectory(dir, attrs);    //Autocreated
 	}
 
@@ -53,22 +51,16 @@ public class VideoFileVisitor extends SimpleFileVisitor<Path> {
 		//log.trace("visiting file "+file+ " with extension "+getFileExtension(file.toString()));
 		if(attr.isRegularFile() && hasCorrectExtension(getFileExtension(file.toString()))) {
 			sumFileVisited++;
-			FileMetaData fileMetaData = analyser.analyzeFile(file.toString(),folderMetaData);
+			FileMetaData fileMetaData = new FileMetaData(file.toString(), folderInfo);
 
-			folderMetaData.addFile(fileMetaData);
-
-			if(fileMetaData.getSeriesData().isCouldReadSeasonEpisodeData()) {
-				sumRecognizedFiles++;
-			} else {
-				//log.trace("could not recognize "+file+ " with extension "+getFileExtension(file.toString()));
-			}
+			folderInfo.addFile(fileMetaData);
 		}
 		return FileVisitResult.CONTINUE;
 	}
 
 	@Override
 	public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-		folderMetaData = folderMetaData.getParentFolder();
+		folderInfo = folderInfo.getParentFolder();
 		return super.postVisitDirectory(dir, exc);    //Autocreated
 	}
 
@@ -95,7 +87,7 @@ public class VideoFileVisitor extends SimpleFileVisitor<Path> {
 		return sumFileVisited;
 	}
 
-	public int getSumRecognizedFiles() {
-		return sumRecognizedFiles;
+	public FolderInfo getRoot() {
+		return refFolder.getRoot();
 	}
 }

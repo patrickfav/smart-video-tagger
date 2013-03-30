@@ -1,32 +1,38 @@
 package at.favre.tools.tagger.analyzer.metadata;
 
-import at.favre.tools.tagger.analyzer.EVideoType;
+import at.favre.tools.tagger.analyzer.GuessCallback;
 
-import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author PatrickF
  * @since 23.03.13
  */
-public class FileMetaData {
+public class FileMetaData implements GuessCallback{
 	private static final int INVALID = -1;
 	private static final boolean VERBOSE_LOG = false;
 
-	private String originalFullPath;
 	private EVideoType type = EVideoType.SERIES;
-	private FolderMetaData folder;
 
-	private String titleChunks = "";
-	private String guessedTitle = "";
-	private int year = INVALID;
+	private final FileInfo fileInfo;
 
 	private SeriesData seriesData;
 	private ServiceIds serviceIds;
 
-	public FileMetaData(String originalFullPath) {
-		this.originalFullPath = originalFullPath;
+	private List<Guess> guesses;
+
+	public FileMetaData(String originalFullPath, FolderInfo parentFolder) {
+		fileInfo = new FileInfo(originalFullPath,parentFolder);
 		serviceIds = new ServiceIds();
 		seriesData=new SeriesData();
+		guesses = new CopyOnWriteArrayList<Guess>();
+	}
+
+	public FileInfo getFileInfo() {
+		return fileInfo;
 	}
 
 	public EVideoType getType() {
@@ -37,22 +43,6 @@ public class FileMetaData {
 		this.type = type;
 	}
 
-	public String getTitleChunks() {
-		return titleChunks;
-	}
-
-	public void setTitleChunks(String titleChunks) {
-		this.titleChunks = titleChunks;
-	}
-
-	public FolderMetaData getFolder() {
-		return folder;
-	}
-
-	public void setFolder(FolderMetaData folder) {
-		this.folder = folder;
-	}
-
 	public SeriesData getSeriesData() {
 		return seriesData;
 	}
@@ -61,35 +51,20 @@ public class FileMetaData {
 		this.seriesData = seriesData;
 	}
 
-	public int getYear() {
-		return year;
+	public List<Guess> getGuesses() {
+		return guesses;
 	}
 
-	public void setYear(int year) {
-		this.year = year;
-	}
+	public  List<Guess> getGuessesByType(Guess.Type type) {
+		List<Guess> typeList = new ArrayList<Guess>();
 
-	public String getGuessedTitle() {
-		return guessedTitle;
-	}
-
-	public void setGuessedTitle(String guessedTitle) {
-		this.guessedTitle = guessedTitle;
-	}
-
-
-	public String getPureFileName() {
-		File file = new File(originalFullPath);
-		return stripExtension(file.getName());
-	}
-
-	private static String stripExtension(String fileName) {
-		int lastIndexOfPoint = fileName.lastIndexOf('.');
-
-		if(lastIndexOfPoint != -1) {
-			return fileName.substring(0,lastIndexOfPoint);
+		for(Guess g: guesses) {
+			if(g.getType().equals(type)) {
+				typeList.add(g);
+			}
 		}
-		return fileName;
+
+		return Collections.unmodifiableList(typeList);
 	}
 
 	@Override
@@ -99,25 +74,20 @@ public class FileMetaData {
 
 	private String getStringRepresentation() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(titleChunks);
-
-		if(year != INVALID) {
-			sb.append(" ("+year+")");
-		}
-
-		if(guessedTitle.length() > 0) {
-			sb.append(" [guessed: "+guessedTitle+"]");
-		}
-
-		if(VERBOSE_LOG) {
-			sb.append(" FULLPATH: "+originalFullPath);
-		}
+		sb.append(fileInfo.getPureFileName());
 
 
-		if (type.equals(EVideoType.SERIES)) {
-			return "S" + String.format("%02d", seriesData.getSeason()) + "E" + String.format("%02d", seriesData.getEpisode()) + " " + sb.toString();
+		for(Guess.Type type:Guess.Type.values()) {
+			for(Guess g: getGuessesByType(type)) {
+				sb.append("\n"+g.getType()+": "+g.getValue()+" with chance of "+g.getProbability());
+			}
 		}
 
 		return sb.toString();
+	}
+
+	@Override
+	public void onAnalyseComplete(List<Guess> guessList) {
+		guesses.addAll(guessList);
 	}
 }
