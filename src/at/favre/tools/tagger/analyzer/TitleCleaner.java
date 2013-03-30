@@ -3,6 +3,7 @@ package at.favre.tools.tagger.analyzer;
 import at.favre.tools.tagger.system.ConfigManager;
 import at.favre.tools.tagger.system.FilterWord;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -77,18 +78,17 @@ public class TitleCleaner {
 		return s;
 	}
 
+	public static String getPureFileName(String fullPath) {
+		File file = new File(fullPath);
+		return stripExtension(file.getName());
+	}
 
-	private static List<String> tryToExtractTitleFromChunks(List<String> chunks) {
-		List<String> cleanedChunks = new ArrayList<String>();
-		int emptyChunks = 0;
+	private static String stripExtension(String fileName) {
+		int lastIndexOfPoint = fileName.lastIndexOf('.');
 
-		for(int i=0,ii=chunks.size();i<ii;i++) {
-			if(chunks.get(i).length() == 0) {
-				emptyChunks++;
-			} else {
-				cleanedChunks.add(chunks.get(i).trim());
-			}
+		if(lastIndexOfPoint != -1) {
+			return fileName.substring(0,lastIndexOfPoint);
 		}
-		return cleanedChunks;
+		return fileName;
 	}
 }

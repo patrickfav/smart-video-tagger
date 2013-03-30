@@ -10,11 +10,13 @@ public class Guess {
 	private final Type type;
 	private final Probability probability;
 	private final String value;
+	private final String analyzerName;
 
-	public Guess(Type type, Probability probability, String value) {
+	public Guess(Type type, Probability probability, String value, String analyzerName) {
 		this.type = type;
 		this.probability = probability;
 		this.value = value;
+		this.analyzerName = analyzerName;
 	}
 
 	public Type getType() {
@@ -29,6 +31,15 @@ public class Guess {
 		return value;
 	}
 
+	public String getAnalyzerName() {
+		return analyzerName;
+	}
+
+	@Override
+	public String toString() {
+		return type +"["+probability+"]: "+value+" ("+analyzerName+")";
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -36,6 +47,7 @@ public class Guess {
 
 		Guess guess = (Guess) o;
 
+		if (!analyzerName.equals(guess.analyzerName)) return false;
 		if (!probability.equals(guess.probability)) return false;
 		if (type != guess.type) return false;
 		if (!value.equals(guess.value)) return false;
@@ -48,6 +60,7 @@ public class Guess {
 		int result = type.hashCode();
 		result = 31 * result + probability.hashCode();
 		result = 31 * result + value.hashCode();
+		result = 31 * result + analyzerName.hashCode();
 		return result;
 	}
 }

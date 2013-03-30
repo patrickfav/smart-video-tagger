@@ -8,6 +8,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,6 +20,8 @@ public class FileNameAnalyser {
 
 	private List<IAnalyzer> analyzers;
 	private FolderInfo rootFolder;
+	private Date analyzeStart;
+	private Date analyzeEnd;
 
 	public FileNameAnalyser(FolderInfo rootFolder) {
 		this.rootFolder = rootFolder;
@@ -26,9 +29,11 @@ public class FileNameAnalyser {
 		analyzers.add(new DateAnalyzer());
 		analyzers.add(new TitlePathAnalyzer());
 		analyzers.add(new SeasonEpisodeAnalyser());
+		analyzers.add(new FilesInPathTitleAnalyzer());
 	}
 
 	public void analyzeAll() {
+		analyzeStart = new Date();
 		expand(rootFolder);
 
 		while(WorkerManager.getInstance().getThreadPool().isTerminated()) {
@@ -38,8 +43,9 @@ public class FileNameAnalyser {
 				e.printStackTrace();
 			}
 		}
+		analyzeEnd = new Date();
 
-		new MetaDataParser(rootFolder).parseToLog();
+		log.info("Analyse complete. Duration: "+getLastAnalysationDuration()+" ms");
 	}
 
 	private void expand(FolderInfo folderToExpand) {
@@ -54,6 +60,18 @@ public class FileNameAnalyser {
 		for(FolderInfo folder: folderToExpand.getChildren()) {
 			expand(folder);
 		}
+	}
+
+	public void parseToLog() {
+		new MetaDataParser(rootFolder).parseToLog();
+	}
+
+	public long getLastAnalysationDuration() {
+		if(analyzeStart != null && analyzeEnd != null) {
+			return analyzeEnd.getTime() - analyzeStart.getTime();
+		}
+
+		return -1;
 	}
 
 

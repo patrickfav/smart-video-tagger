@@ -24,7 +24,7 @@ public class Probability {
 
 	private Probability(double probability) {
 		if(probability > 1.0 || probability < 0.0) {
-			throw new IllegalArgumentException("Probability must be between 0.0 and 1.0");
+			throw new IllegalArgumentException("Probability must be between 0.0 and 1.0. "+probability+" was given.");
 		}
 		this.probability = probability;
 	}

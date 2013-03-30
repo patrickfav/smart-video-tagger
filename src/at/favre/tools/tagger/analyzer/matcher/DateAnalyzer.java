@@ -41,13 +41,13 @@ public class DateAnalyzer implements IAnalyzer{
 
 		if(yearBrackets != -1 || standAloneYear != -1) {
 			if(yearBrackets == standAloneYear) {
-				guessList.add(new Guess(Guess.Type.YEAR,Probability.getInstance(0.8),String.valueOf(yearBrackets)));
+				guessList.add(new Guess(Guess.Type.YEAR,Probability.getInstance(0.8),String.valueOf(yearBrackets), this.getClass().getSimpleName()));
 			} else {
 				if(yearBrackets != -1) {
-					guessList.add(new Guess(Guess.Type.YEAR,Probability.getInstance(0.7),String.valueOf(yearBrackets)));
+					guessList.add(new Guess(Guess.Type.YEAR,Probability.getInstance(0.7),String.valueOf(yearBrackets), this.getClass().getSimpleName()));
 				}
 				if(standAloneYear != -1) {
-					guessList.add(new Guess(Guess.Type.YEAR,Probability.getInstance(0.7),String.valueOf(yearBrackets)));
+					guessList.add(new Guess(Guess.Type.YEAR,Probability.getInstance(0.7),String.valueOf(yearBrackets), this.getClass().getSimpleName()));
 				}
 			}
 		}

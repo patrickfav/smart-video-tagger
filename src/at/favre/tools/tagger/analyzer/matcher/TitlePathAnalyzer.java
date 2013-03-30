@@ -26,7 +26,7 @@ public class TitlePathAnalyzer implements IAnalyzer{
 				Matcher m = Pattern.compile(folder.getFolderName(),Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE)
 						.matcher(fileInfo.getCleanedFileName());
 				if(m.find()) {
-					guessList.add(new Guess(Guess.Type.TITLE, Probability.getInstance(0.75),folder.getFolderName()));
+					guessList.add(new Guess(Guess.Type.TITLE, Probability.getInstance(0.75),folder.getFolderName(), this.getClass().getSimpleName()));
 				}
 			}
 			folder = folder.getParentFolder();

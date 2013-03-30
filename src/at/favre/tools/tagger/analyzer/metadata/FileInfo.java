@@ -2,8 +2,6 @@ package at.favre.tools.tagger.analyzer.metadata;
 
 import at.favre.tools.tagger.analyzer.TitleCleaner;
 
-import java.io.File;
-
 /**
  * @author PatrickF
  * @since 30.03.13
@@ -13,11 +11,13 @@ public class FileInfo {
 	private final String fullPath;
 	private final FolderInfo parentFolder;
 	private final String cleanedFileName;
+	private final String pureFileName;
 
 	public FileInfo(String fullPath, FolderInfo parentFolder) {
 		this.fullPath = fullPath;
 		this.parentFolder = parentFolder;
-		cleanedFileName = TitleCleaner.cleanTitle(getPureFileName());
+		this.pureFileName = TitleCleaner.getPureFileName(fullPath);
+		this.cleanedFileName = TitleCleaner.cleanTitle(pureFileName);
 	}
 
 
@@ -34,17 +34,7 @@ public class FileInfo {
 	}
 
 	public String getPureFileName() {
-		File file = new File(fullPath);
-		return stripExtension(file.getName());
-	}
-
-	private static String stripExtension(String fileName) {
-		int lastIndexOfPoint = fileName.lastIndexOf('.');
-
-		if(lastIndexOfPoint != -1) {
-			return fileName.substring(0,lastIndexOfPoint);
-		}
-		return fileName;
+		return pureFileName;
 	}
 
 	@Override

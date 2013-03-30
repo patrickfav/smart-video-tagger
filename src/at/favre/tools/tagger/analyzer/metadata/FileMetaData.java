@@ -79,7 +79,7 @@ public class FileMetaData implements GuessCallback{
 
 		for(Guess.Type type:Guess.Type.values()) {
 			for(Guess g: getGuessesByType(type)) {
-				sb.append("\n"+g.getType()+": "+g.getValue()+" with chance of "+g.getProbability());
+				sb.append("\n"+g);
 			}
 		}
 

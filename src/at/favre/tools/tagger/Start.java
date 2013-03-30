@@ -3,6 +3,7 @@ package at.favre.tools.tagger;
 import at.favre.tools.tagger.analyzer.EContainedTypes;
 import at.favre.tools.tagger.analyzer.FileNameAnalyser;
 import at.favre.tools.tagger.analyzer.ScannerConfig;
+import at.favre.tools.tagger.analyzer.WorkerManager;
 import at.favre.tools.tagger.io.VideoFileVisitor;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -35,5 +36,8 @@ public class Start {
 
 		FileNameAnalyser analyzer = new FileNameAnalyser(visitor.getRoot());
 		analyzer.analyzeAll();
+		analyzer.parseToLog();
+
+		WorkerManager.getInstance().getThreadPool().shutdown();
 	}
 }

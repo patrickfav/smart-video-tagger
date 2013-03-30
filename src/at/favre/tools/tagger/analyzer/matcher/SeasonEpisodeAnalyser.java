@@ -47,11 +47,11 @@ public class SeasonEpisodeAnalyser implements IAnalyzer{
 				}
 
 				if(season != NON_FOUND) {
-					guessList.add(new Guess(Guess.Type.SEASON_NO, getDeductedSeasonProbability(type.getProbabilityOfPatternMeansSesonEpisode(),season),String.valueOf(season)));
+					guessList.add(new Guess(Guess.Type.SEASON_NO, getDeductedSeasonProbability(type.getProbabilityOfPatternMeansSesonEpisode(),season),String.valueOf(season), this.getClass().getSimpleName()));
 				}
 
 				if(episode != NON_FOUND) {
-					guessList.add(new Guess(Guess.Type.EPISODE_NO, getDeductedEpisodeProbability(type.getProbabilityOfPatternMeansSesonEpisode(),episode),String.valueOf(episode)));
+					guessList.add(new Guess(Guess.Type.EPISODE_NO, getDeductedEpisodeProbability(type.getProbabilityOfPatternMeansSesonEpisode(),episode),String.valueOf(episode), this.getClass().getSimpleName()));
 				}
 			}
 		}
