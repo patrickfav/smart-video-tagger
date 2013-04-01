@@ -23,22 +23,32 @@ public class FileNameAnalyser {
 	private Date analyzeStart;
 	private Date analyzeEnd;
 
-	public FileNameAnalyser(FolderInfo rootFolder) {
+	private int startedThreads = 0;
+
+	public FileNameAnalyser(FolderInfo rootFolder, ScannerConfig config) {
 		this.rootFolder = rootFolder;
 		analyzers = new ArrayList<IAnalyzer>();
 		analyzers.add(new DateAnalyzer());
 		analyzers.add(new TitlePathAnalyzer());
 		analyzers.add(new SeasonEpisodeAnalyser());
 		analyzers.add(new FilesInPathTitleAnalyzer());
+		analyzers.add(new ReadMetaDataAnalyzer(config.getFfmpegPath()));
 	}
 
 	public void analyzeAll() {
 		analyzeStart = new Date();
 		expand(rootFolder);
 
-		while(WorkerManager.getInstance().getThreadPool().isTerminated()) {
+		log.info("Startet threads: "+startedThreads);
+		while(!WorkerManager.getInstance().getThreadPool().isShutdown()) {
 			try {
-				Thread.sleep(5000);
+				log.info("Finished threads: "+WorkerManager.getFinishedThreads().toString());
+
+				if(WorkerManager.getFinishedThreads().intValue() == startedThreads) {
+					WorkerManager.getInstance().getThreadPool().shutdownNow();
+				}
+
+				Thread.sleep(500);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -46,6 +56,10 @@ public class FileNameAnalyser {
 		analyzeEnd = new Date();
 
 		log.info("Analyse complete. Duration: "+getLastAnalysationDuration()+" ms");
+
+		for(IAnalyzer analyzer:analyzers) {
+			analyzer.close();
+		}
 	}
 
 	private void expand(FolderInfo folderToExpand) {
@@ -54,6 +68,7 @@ public class FileNameAnalyser {
 			for(IAnalyzer analyzer:analyzers) {
 				Runnable r = new AnalyseRunner(analyzer,file.getFileInfo(),file);
 				WorkerManager.getInstance().getThreadPool().execute(r);
+				startedThreads++;
 			}
 		}
 

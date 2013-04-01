@@ -34,4 +34,6 @@ public class TitlePathAnalyzer implements IAnalyzer{
 
 		return guessList;
 	}
+
+	public void close() {}
 }

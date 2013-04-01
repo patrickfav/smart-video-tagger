@@ -22,4 +22,6 @@ public class AnalyseRunner implements Runnable{
 	public void run() {
 		callback.onAnalyseComplete(analyzer.analyze(fileInfo));
 	}
+
+
 }

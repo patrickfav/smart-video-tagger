@@ -12,4 +12,5 @@ import java.util.List;
 public interface IAnalyzer {
 
 	public List<Guess> analyze(FileInfo fileInfo);
+	public void close();
 }

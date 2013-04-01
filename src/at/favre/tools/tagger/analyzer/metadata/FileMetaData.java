@@ -1,6 +1,7 @@
 package at.favre.tools.tagger.analyzer.metadata;
 
 import at.favre.tools.tagger.analyzer.GuessCallback;
+import at.favre.tools.tagger.analyzer.WorkerManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -79,7 +80,7 @@ public class FileMetaData implements GuessCallback{
 
 		for(Guess.Type type:Guess.Type.values()) {
 			for(Guess g: getGuessesByType(type)) {
-				sb.append("\n"+g);
+				sb.append(" | "+g);
 			}
 		}
 
@@ -88,6 +89,7 @@ public class FileMetaData implements GuessCallback{
 
 	@Override
 	public void onAnalyseComplete(List<Guess> guessList) {
+		WorkerManager.getFinishedThreads().incrementAndGet();
 		guesses.addAll(guessList);
 	}
 }

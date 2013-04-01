@@ -53,4 +53,6 @@ public class DateAnalyzer implements IAnalyzer{
 		}
 		return guessList;
 	}
+
+	public void close() {}
 }

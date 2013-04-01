@@ -1,5 +1,6 @@
 package at.favre.tools.tagger.analyzer.matcher;
 
+import at.favre.tools.tagger.analyzer.metadata.EVideoType;
 import at.favre.tools.tagger.analyzer.metadata.FileInfo;
 import at.favre.tools.tagger.analyzer.metadata.Guess;
 import at.favre.tools.tagger.analyzer.metadata.Probability;
@@ -46,12 +47,19 @@ public class SeasonEpisodeAnalyser implements IAnalyzer{
 					log.warn("Resulting string "+matchedString+" has strange length of "+matchedString.length());
 				}
 
+				Probability seasonProb = getDeductedSeasonProbability(type.getProbabilityOfPatternMeansSesonEpisode(),season);
+				Probability episodeProb = getDeductedEpisodeProbability(type.getProbabilityOfPatternMeansSesonEpisode(),episode);
 				if(season != NON_FOUND) {
-					guessList.add(new Guess(Guess.Type.SEASON_NO, getDeductedSeasonProbability(type.getProbabilityOfPatternMeansSesonEpisode(),season),String.valueOf(season), this.getClass().getSimpleName()));
+					guessList.add(new Guess(Guess.Type.SEASON_NO,seasonProb ,String.valueOf(season), this.getClass().getSimpleName()));
 				}
 
 				if(episode != NON_FOUND) {
-					guessList.add(new Guess(Guess.Type.EPISODE_NO, getDeductedEpisodeProbability(type.getProbabilityOfPatternMeansSesonEpisode(),episode),String.valueOf(episode), this.getClass().getSimpleName()));
+					guessList.add(new Guess(Guess.Type.EPISODE_NO,episodeProb ,String.valueOf(episode), this.getClass().getSimpleName()));
+				}
+
+				if(seasonProb.getProbability() > 0.5 && episodeProb.getProbability() > 0.5) {
+					double avg = (seasonProb.getProbability() + episodeProb.getProbability()) / 2.0;
+					guessList.add(new Guess(Guess.Type.MEDIA_TYPE,Probability.getInstance(avg), EVideoType.SERIES.toString(),this.getClass().getSimpleName()));
 				}
 			}
 		}
@@ -78,4 +86,6 @@ public class SeasonEpisodeAnalyser implements IAnalyzer{
 		}
 		return undeductedProbability;
 	}
+
+	public void close() {}
 }

@@ -1,9 +1,6 @@
 package at.favre.tools.tagger.analyzer.matcher;
 
-import at.favre.tools.tagger.analyzer.metadata.FileInfo;
-import at.favre.tools.tagger.analyzer.metadata.FileMetaData;
-import at.favre.tools.tagger.analyzer.metadata.Guess;
-import at.favre.tools.tagger.analyzer.metadata.Probability;
+import at.favre.tools.tagger.analyzer.metadata.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +10,7 @@ import java.util.List;
  * @since 30.03.13
  */
 public class FilesInPathTitleAnalyzer implements IAnalyzer{
-	private static final int MIN_SUBSTRING_LENGTH = 4;
+	private static final int MIN_SUBSTRING_LENGTH = 6;
 
 	private int skippedFiles;
 
@@ -37,11 +34,14 @@ public class FilesInPathTitleAnalyzer implements IAnalyzer{
 			}
 		}
 
-		if(!longestSubString.equals(fileInfo.getCleanedFileName())) {
+		if(!longestSubString.equals(fileInfo.getCleanedFileName()) && longestSubString.length() >= MIN_SUBSTRING_LENGTH) {
 			Probability p = Probability.getInstance(getLikelinessOfCorrectTitle(skippedFiles,fileInfo.getParentFolder().getFiles().size()));
-			guessList.add(new Guess(Guess.Type.TITLE,p,longestSubString, this.getClass().getSimpleName()));
-		}
+			guessList.add(new Guess(Guess.Type.TITLE, p, longestSubString, this.getClass().getSimpleName()));
 
+			if(p.getProbability() > 0.5) {
+				guessList.add(new Guess(Guess.Type.MEDIA_TYPE,p, EVideoType.SERIES.toString(),this.getClass().getSimpleName()));
+			}
+		}
 
 		return guessList;
 	}
@@ -104,4 +104,6 @@ public class FilesInPathTitleAnalyzer implements IAnalyzer{
 
 		return sb.toString();
 	}
+
+	public void close() {}
 }

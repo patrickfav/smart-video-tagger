@@ -23,18 +23,19 @@ public class Start {
 	public static void main(String[] args) {
 		Path path = FileSystems.getDefault().getPath("H:\\== SERIES ==");
 
-		ScannerConfig config = new ScannerConfig(EContainedTypes.MIXED,true,true);
+		ScannerConfig config = new ScannerConfig(EContainedTypes.MIXED,true,true, "C:\\Program Files (x86)\\ffmpeg\\ffmpeg-win32-static\\bin\\ffmpeg.exe");
 
 		VideoFileVisitor visitor = new VideoFileVisitor(config);
 
 		try {
+			log.info("Start reading filesystem.");
 			Files.walkFileTree(path, visitor);
 			log.info("Found files "+visitor.getSumFileVisited());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		FileNameAnalyser analyzer = new FileNameAnalyser(visitor.getRoot());
+		FileNameAnalyser analyzer = new FileNameAnalyser(visitor.getRoot(),config);
 		analyzer.analyzeAll();
 		analyzer.parseToLog();
 

@@ -1,6 +1,6 @@
 package at.favre.tools.tagger.system;
 
-import at.favre.tools.tagger.io.filereader.TextFileReader;
+import at.favre.tools.tagger.io.filereader.WordListFileReader;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -30,12 +30,12 @@ public class ConfigManager {
 	}
 
 	private List<String> readExtensions() {
-		return new TextFileReader("/extensions.txt").getAllItemsInTextFile();
+		return new WordListFileReader("/extensions.txt").getAllItemsInTextFile();
 	}
 
 	private List<FilterWord> readIgnoreWords() {
 		List<FilterWord> ignoreWordList = new ArrayList<FilterWord>();
-		List<String> list =  new TextFileReader(ignoreWordsFilePath).getAllItemsInTextFile();
+		List<String> list =  new WordListFileReader(ignoreWordsFilePath).getAllItemsInTextFile();
 
 		for(String ignoreWord:list) {
 			if(ignoreWord.startsWith("\"") && ignoreWord.endsWith("\"")) {
