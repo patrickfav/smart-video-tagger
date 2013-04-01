@@ -1,6 +1,6 @@
 package at.favre.tools.tagger.analyzer.metadata;
 
-import at.favre.tools.tagger.analyzer.TitleCleaner;
+import at.favre.tools.tagger.analyzer.util.TitleCleaner;
 
 /**
  * @author PatrickF

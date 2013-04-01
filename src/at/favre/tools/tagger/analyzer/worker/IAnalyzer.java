@@ -1,4 +1,4 @@
-package at.favre.tools.tagger.analyzer.matcher;
+package at.favre.tools.tagger.analyzer.worker;
 
 import at.favre.tools.tagger.analyzer.metadata.FileInfo;
 import at.favre.tools.tagger.analyzer.metadata.Guess;
@@ -13,4 +13,9 @@ public interface IAnalyzer {
 
 	public List<Guess> analyze(FileInfo fileInfo);
 	public void close();
+
+
+	interface GuessCallback {
+		public void onAnalyseComplete(List<Guess> guessList);
+	}
 }

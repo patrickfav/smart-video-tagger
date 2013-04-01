@@ -1,4 +1,4 @@
-package at.favre.tools.tagger.system;
+package at.favre.tools.tagger.analyzer.config;
 
 /**
  * @author PatrickF

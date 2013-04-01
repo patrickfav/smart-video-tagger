@@ -1,7 +1,7 @@
 package at.favre.tools.tagger.analyzer.metadata;
 
-import at.favre.tools.tagger.analyzer.GuessCallback;
-import at.favre.tools.tagger.analyzer.WorkerManager;
+import at.favre.tools.tagger.analyzer.worker.IAnalyzer;
+import at.favre.tools.tagger.analyzer.worker.WorkerManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,7 +12,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author PatrickF
  * @since 23.03.13
  */
-public class FileMetaData implements GuessCallback{
+public class FileMetaData implements IAnalyzer.GuessCallback {
 	private static final int INVALID = -1;
 	private static final boolean VERBOSE_LOG = false;
 

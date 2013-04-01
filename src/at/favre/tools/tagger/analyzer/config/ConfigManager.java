@@ -1,6 +1,6 @@
-package at.favre.tools.tagger.system;
+package at.favre.tools.tagger.analyzer.config;
 
-import at.favre.tools.tagger.io.filereader.WordListFileReader;
+import at.favre.tools.tagger.analyzer.io.filereader.WordListFileReader;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 

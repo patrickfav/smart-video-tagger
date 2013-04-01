@@ -1,4 +1,4 @@
-package at.favre.tools.tagger.analyzer;
+package at.favre.tools.tagger.analyzer.worker;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @since 30.03.13
  */
 public class WorkerManager {
-	private static final int MAX_THREADS = 8;
+	private static final int MAX_THREADS = 32;
 
 	private static AtomicInteger finishedThreads = new AtomicInteger(0);
 	private static WorkerManager ourInstance = new WorkerManager();

@@ -1,6 +1,5 @@
-package at.favre.tools.tagger.analyzer.matcher;
+package at.favre.tools.tagger.analyzer.worker;
 
-import at.favre.tools.tagger.analyzer.GuessCallback;
 import at.favre.tools.tagger.analyzer.metadata.FileInfo;
 
 /**
@@ -10,9 +9,9 @@ import at.favre.tools.tagger.analyzer.metadata.FileInfo;
 public class AnalyseRunner implements Runnable{
 	private IAnalyzer analyzer;
 	private FileInfo fileInfo;
-	private GuessCallback callback;
+	private IAnalyzer.GuessCallback callback;
 
-	public AnalyseRunner(IAnalyzer analyzer, FileInfo fileInfo, GuessCallback callback) {
+	public AnalyseRunner(IAnalyzer analyzer, FileInfo fileInfo, IAnalyzer.GuessCallback callback) {
 		this.analyzer = analyzer;
 		this.fileInfo = fileInfo;
 		this.callback = callback;

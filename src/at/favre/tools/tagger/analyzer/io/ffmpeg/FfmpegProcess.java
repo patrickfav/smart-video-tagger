@@ -1,6 +1,6 @@
-package at.favre.tools.tagger.io.ffmpeg;
+package at.favre.tools.tagger.analyzer.io.ffmpeg;
 
-import at.favre.tools.tagger.io.filereader.TextFileReader;
+import at.favre.tools.tagger.analyzer.io.filereader.TextFileReader;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -8,10 +8,7 @@ import java.io.*;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * @author PatrickF
@@ -52,19 +49,17 @@ public class FfmpegProcess {
 			File tempFile = null;
 			Process ffmpegProcess =null;
 			try {
-				tempFile = Files.createTempFile(tempFolderPath,"",EXTENSION).toFile();
+				tempFile = new File(tempFolderPath.toFile(),UUID.randomUUID().toString()+EXTENSION);
 
 				ProcessBuilder builder = new ProcessBuilder("\""+ffmpegPath.getAbsolutePath() +"\""+
 						" -i \""+pathToMovie+"\" -f ffmetadata \""+tempFile.getAbsolutePath()+"\"");
-
+				builder.redirectErrorStream(true);
 				ffmpegProcess = builder.start();
 
-				Thread.sleep(500);
-
-				handleStream(ffmpegProcess.getErrorStream(), "ERROR");
 				handleStream(ffmpegProcess.getInputStream(), "OUTPUT");
-				int exitVal = ffmpegProcess.waitFor();
-				log.info("Process exitValue: " + exitVal);
+				ffmpegProcess.getInputStream().close();
+
+				ffmpegProcess.waitFor();
 
 				TextFileReader reader = new TextFileReader(tempFile);
 				List<String> lines = reader.getAllItemsInTextFile();
@@ -115,12 +110,24 @@ public class FfmpegProcess {
 		}
 	}
 
-	private void handleStream(InputStream inputStream, String type) throws IOException {
+	private void handleStream(InputStream inputStream, String type)  {
 		InputStreamReader isr = new InputStreamReader(inputStream);
 		BufferedReader br = new BufferedReader(isr);
-		String line = null;
-		while ( (line = br.readLine()) != null)
-			log.trace(type+": "+line);
+		String line;
+		try {
+			while ((line = br.readLine()) != null)
+				;//log.trace(type+": "+line);
+		} catch (IOException e) {
+			registerError("Could not read process output stream",e);
+		}
+
+		try {
+			br.close();
+			isr.close();
+		} catch (IOException e) {
+			registerError("Could not close process output stream", e);
+		}
+
 	}
 
 }

@@ -1,4 +1,4 @@
-package at.favre.tools.tagger.analyzer.matcher;
+package at.favre.tools.tagger.analyzer.worker;
 
 import at.favre.tools.tagger.analyzer.metadata.EVideoType;
 import at.favre.tools.tagger.analyzer.metadata.FileInfo;

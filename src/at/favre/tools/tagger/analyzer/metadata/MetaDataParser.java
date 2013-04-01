@@ -1,7 +1,5 @@
-package at.favre.tools.tagger;
+package at.favre.tools.tagger.analyzer.metadata;
 
-import at.favre.tools.tagger.analyzer.metadata.FileMetaData;
-import at.favre.tools.tagger.analyzer.metadata.FolderInfo;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 

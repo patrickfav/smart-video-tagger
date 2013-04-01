@@ -1,4 +1,4 @@
-package at.favre.tools.tagger.io.filereader;
+package at.favre.tools.tagger.analyzer.io.filereader;
 
 import java.io.*;
 import java.util.ArrayList;

@@ -1,7 +1,7 @@
-package at.favre.tools.tagger.analyzer;
+package at.favre.tools.tagger.analyzer.util;
 
-import at.favre.tools.tagger.system.ConfigManager;
-import at.favre.tools.tagger.system.FilterWord;
+import at.favre.tools.tagger.analyzer.config.ConfigManager;
+import at.favre.tools.tagger.analyzer.config.FilterWord;
 
 import java.io.File;
 import java.util.ArrayList;

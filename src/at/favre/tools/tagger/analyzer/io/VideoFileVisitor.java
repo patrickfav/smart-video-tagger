@@ -1,10 +1,8 @@
-package at.favre.tools.tagger.io;
+package at.favre.tools.tagger.analyzer.io;
 
-import at.favre.tools.tagger.analyzer.FileNameAnalyser;
-import at.favre.tools.tagger.analyzer.ScannerConfig;
+import at.favre.tools.tagger.analyzer.config.ConfigManager;
 import at.favre.tools.tagger.analyzer.metadata.FileMetaData;
 import at.favre.tools.tagger.analyzer.metadata.FolderInfo;
-import at.favre.tools.tagger.system.ConfigManager;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -21,13 +19,11 @@ import java.nio.file.attribute.BasicFileAttributes;
 public class VideoFileVisitor extends SimpleFileVisitor<Path> {
 	private Logger log = LogManager.getLogger(this.getClass().getSimpleName());
 
-	private FileNameAnalyser analyser;
 	private int sumFileVisited;
 	private FolderInfo folderInfo;
 	private FolderInfo refFolder;
 
-	public VideoFileVisitor(ScannerConfig config) {
-		//analyser = new FileNameAnalyser(config);
+	public VideoFileVisitor() {
 	}
 
 	@Override
@@ -48,7 +44,6 @@ public class VideoFileVisitor extends SimpleFileVisitor<Path> {
 
 	@Override
 	public FileVisitResult visitFile(Path file, BasicFileAttributes attr) {
-		//log.trace("visiting file "+file+ " with extension "+getFileExtension(file.toString()));
 		if(attr.isRegularFile() && hasCorrectExtension(getFileExtension(file.toString()))) {
 			sumFileVisited++;
 			FileMetaData fileMetaData = new FileMetaData(file.toString(), folderInfo);

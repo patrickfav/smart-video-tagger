@@ -1,10 +1,10 @@
 package at.favre.tools.tagger;
 
-import at.favre.tools.tagger.analyzer.EContainedTypes;
-import at.favre.tools.tagger.analyzer.FileNameAnalyser;
-import at.favre.tools.tagger.analyzer.ScannerConfig;
-import at.favre.tools.tagger.analyzer.WorkerManager;
-import at.favre.tools.tagger.io.VideoFileVisitor;
+import at.favre.tools.tagger.analyzer.FileAnalyzer;
+import at.favre.tools.tagger.analyzer.config.EContainedTypes;
+import at.favre.tools.tagger.analyzer.config.ScannerConfig;
+import at.favre.tools.tagger.analyzer.worker.WorkerManager;
+import at.favre.tools.tagger.analyzer.io.VideoFileVisitor;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -25,7 +25,7 @@ public class Start {
 
 		ScannerConfig config = new ScannerConfig(EContainedTypes.MIXED,true,true, "C:\\Program Files (x86)\\ffmpeg\\ffmpeg-win32-static\\bin\\ffmpeg.exe");
 
-		VideoFileVisitor visitor = new VideoFileVisitor(config);
+		VideoFileVisitor visitor = new VideoFileVisitor();
 
 		try {
 			log.info("Start reading filesystem.");
@@ -35,7 +35,7 @@ public class Start {
 			e.printStackTrace();
 		}
 
-		FileNameAnalyser analyzer = new FileNameAnalyser(visitor.getRoot(),config);
+		FileAnalyzer analyzer = new FileAnalyzer(visitor.getRoot(),config);
 		analyzer.analyzeAll();
 		analyzer.parseToLog();
 
