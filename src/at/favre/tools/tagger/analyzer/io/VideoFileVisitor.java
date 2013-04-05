@@ -20,16 +20,19 @@ public class VideoFileVisitor extends SimpleFileVisitor<Path> {
 	private Logger log = LogManager.getLogger(this.getClass().getSimpleName());
 
 	private int sumFileVisited;
+	private int maxFiles;
 	private FolderInfo folderInfo;
 	private FolderInfo refFolder;
+	private FileScanProgressListener listener;
 
-	public VideoFileVisitor() {
+	public VideoFileVisitor(FileScanProgressListener listener) {
+		this.listener = listener;
 	}
 
 	@Override
 	public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
 		FolderInfo newFolder = new FolderInfo(folderInfo,dir.toFile().getName());
-
+		maxFiles = dir.toFile().list().length;
 		if(folderInfo != null) {
 			folderInfo.addChildFolder(newFolder);
 		}
@@ -49,6 +52,7 @@ public class VideoFileVisitor extends SimpleFileVisitor<Path> {
 			FileMetaData fileMetaData = new FileMetaData(file.toString(), folderInfo);
 
 			folderInfo.addFile(fileMetaData);
+			listener.onProgressUpdate(sumFileVisited);
 		}
 		return FileVisitResult.CONTINUE;
 	}
@@ -84,5 +88,9 @@ public class VideoFileVisitor extends SimpleFileVisitor<Path> {
 
 	public FolderInfo getRoot() {
 		return refFolder.getRoot();
+	}
+
+	public interface FileScanProgressListener {
+		public void onProgressUpdate(int filesScanned);
 	}
 }

@@ -25,7 +25,12 @@ public class Start {
 
 		ScannerConfig config = new ScannerConfig(EContainedTypes.MIXED,true,true, "C:\\Program Files (x86)\\ffmpeg\\ffmpeg-win32-static\\bin\\ffmpeg.exe");
 
-		VideoFileVisitor visitor = new VideoFileVisitor();
+		VideoFileVisitor visitor = new VideoFileVisitor(new VideoFileVisitor.FileScanProgressListener() {
+			@Override
+			public void onProgressUpdate(int filesScanned) {
+				//To change body of implemented methods use File | Settings | File Templates.
+			}
+		});
 
 		try {
 			log.info("Start reading filesystem.");
