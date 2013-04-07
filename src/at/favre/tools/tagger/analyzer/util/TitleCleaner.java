@@ -3,7 +3,6 @@ package at.favre.tools.tagger.analyzer.util;
 import at.favre.tools.tagger.analyzer.config.ConfigManager;
 import at.favre.tools.tagger.analyzer.config.FilterWord;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -78,17 +77,4 @@ public class TitleCleaner {
 		return s;
 	}
 
-	public static String getPureFileName(String fullPath) {
-		File file = new File(fullPath);
-		return stripExtension(file.getName());
-	}
-
-	private static String stripExtension(String fileName) {
-		int lastIndexOfPoint = fileName.lastIndexOf('.');
-
-		if(lastIndexOfPoint != -1) {
-			return fileName.substring(0,lastIndexOfPoint);
-		}
-		return fileName;
-	}
 }

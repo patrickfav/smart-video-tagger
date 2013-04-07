@@ -3,10 +3,17 @@
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="at.favre.tools.tagger.ui.Sample">
-	<HBox id="search" prefHeight="500" prefWidth="320" alignment="CENTER">
-		<TextField id="dir_text" editable="false" fx:id="dirTextField"/>
-		<Button id="button" text="Choose" onAction="#handleButtonAction" fx:id="button"/>
+<VBox prefHeight="300" prefWidth="650" xmlns:fx="http://javafx.com/fxml" fx:controller="at.favre.tools.tagger.ui.Sample">
+	<HBox id="search"  alignment="TOP_CENTER">
+		<TextField id="dir_text" editable="false" fx:id="dirTextField" prefWidth="500" prefHeight="30">
+			<tooltip>
+				<Tooltip text="Test"/>
+			</tooltip>
+		</TextField>
+		<Button id="button" text="Scan" onAction="#handleButtonAction" fx:id="start"/>
 	</HBox>
-	<ProgressBar fx:id="progressBar" />
+	<HBox alignment="TOP_CENTER">
+		<ProgressBar fx:id="progressBar" visible="false" prefWidth="500" prefHeight="30"/>
+		<Label fx:id="progressLabel"/>
+	</HBox>
 </VBox>

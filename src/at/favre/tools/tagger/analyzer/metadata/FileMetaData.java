@@ -25,8 +25,8 @@ public class FileMetaData implements IAnalyzer.GuessCallback {
 
 	private List<Guess> guesses;
 
-	public FileMetaData(String originalFullPath, FolderInfo parentFolder) {
-		fileInfo = new FileInfo(originalFullPath,parentFolder);
+	public FileMetaData(String originalFullPath, FolderInfo parentFolder,String hash, long lastModified) {
+		fileInfo = new FileInfo(originalFullPath,parentFolder, hash, lastModified);
 		serviceIds = new ServiceIds();
 		seriesData=new SeriesData();
 		guesses = new CopyOnWriteArrayList<Guess>();

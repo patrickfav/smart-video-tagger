@@ -3,6 +3,7 @@ package at.favre.tools.tagger.analyzer.io;
 import at.favre.tools.tagger.analyzer.config.ConfigManager;
 import at.favre.tools.tagger.analyzer.metadata.FileMetaData;
 import at.favre.tools.tagger.analyzer.metadata.FolderInfo;
+import at.favre.tools.tagger.analyzer.util.FileUtil;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -11,6 +12,8 @@ import java.nio.file.FileVisitResult;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * @author PatrickF
@@ -24,15 +27,23 @@ public class VideoFileVisitor extends SimpleFileVisitor<Path> {
 	private FolderInfo folderInfo;
 	private FolderInfo refFolder;
 	private FileScanProgressListener listener;
+	private MessageDigest hashAlgorithm;
 
-	public VideoFileVisitor(FileScanProgressListener listener) {
+	public VideoFileVisitor() {
+		try {
+			hashAlgorithm = MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void setListener(FileScanProgressListener listener) {
 		this.listener = listener;
 	}
 
 	@Override
 	public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
 		FolderInfo newFolder = new FolderInfo(folderInfo,dir.toFile().getName());
-		maxFiles = dir.toFile().list().length;
 		if(folderInfo != null) {
 			folderInfo.addChildFolder(newFolder);
 		}
@@ -47,12 +58,24 @@ public class VideoFileVisitor extends SimpleFileVisitor<Path> {
 
 	@Override
 	public FileVisitResult visitFile(Path file, BasicFileAttributes attr) {
-		if(attr.isRegularFile() && hasCorrectExtension(getFileExtension(file.toString()))) {
+		if(attr.isRegularFile() && hasCorrectExtension(FileUtil.getFileExtension(file.toString()))) {
 			sumFileVisited++;
-			FileMetaData fileMetaData = new FileMetaData(file.toString(), folderInfo);
+			FileMetaData fileMetaData = null;
+			try {
+				fileMetaData = new FileMetaData(
+						file.toString(),
+						folderInfo,
+						FileUtil.hashFile(file.toFile(), hashAlgorithm),
+						file.toFile().lastModified());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 
 			folderInfo.addFile(fileMetaData);
-			listener.onProgressUpdate(sumFileVisited);
+
+			if(listener != null) {
+				listener.onProgressUpdate(sumFileVisited);
+			}
 		}
 		return FileVisitResult.CONTINUE;
 	}
@@ -61,16 +84,6 @@ public class VideoFileVisitor extends SimpleFileVisitor<Path> {
 	public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
 		folderInfo = folderInfo.getParentFolder();
 		return super.postVisitDirectory(dir, exc);    //Autocreated
-	}
-
-	private static String getFileExtension(String fileName) {
-		int lastIndexOfPoint = fileName.lastIndexOf('.');
-
-		if(lastIndexOfPoint != -1) {
-			return fileName.substring(lastIndexOfPoint+1);
-		}
-
-		return "";
 	}
 
 	private static boolean hasCorrectExtension(String currentExtension) {
