@@ -3,8 +3,8 @@ package at.favre.tools.tagger;
 import at.favre.tools.tagger.analyzer.FileAnalyzer;
 import at.favre.tools.tagger.analyzer.config.EContainedTypes;
 import at.favre.tools.tagger.analyzer.config.ScannerConfig;
-import at.favre.tools.tagger.analyzer.worker.WorkerManager;
 import at.favre.tools.tagger.analyzer.io.VideoFileVisitor;
+import at.favre.tools.tagger.analyzer.worker.WorkerManager;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 

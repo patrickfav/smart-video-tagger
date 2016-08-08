@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import java.lang.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <VBox prefHeight="300" prefWidth="650" xmlns:fx="http://javafx.com/fxml" fx:controller="at.favre.tools.tagger.ui.Sample">
 	<HBox id="search"  alignment="TOP_CENTER">
 		<TextField id="dir_text" editable="false" fx:id="dirTextField" prefWidth="500" prefHeight="30">

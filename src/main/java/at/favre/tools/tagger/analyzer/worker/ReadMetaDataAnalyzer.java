@@ -1,9 +1,9 @@
 package at.favre.tools.tagger.analyzer.worker;
 
+import at.favre.tools.tagger.analyzer.io.ffmpeg.FfmpegProcess;
 import at.favre.tools.tagger.analyzer.metadata.FileInfo;
 import at.favre.tools.tagger.analyzer.metadata.Guess;
 import at.favre.tools.tagger.analyzer.metadata.Probability;
-import at.favre.tools.tagger.analyzer.io.ffmpeg.FfmpegProcess;
 
 import java.util.ArrayList;
 import java.util.List;

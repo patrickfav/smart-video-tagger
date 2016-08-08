@@ -1,10 +1,10 @@
 package at.favre.tools.tagger.analyzer;
 
-import at.favre.tools.tagger.analyzer.metadata.MetaDataParser;
-import at.favre.tools.tagger.analyzer.worker.*;
+import at.favre.tools.tagger.analyzer.config.ScannerConfig;
 import at.favre.tools.tagger.analyzer.metadata.FileMetaData;
 import at.favre.tools.tagger.analyzer.metadata.FolderInfo;
-import at.favre.tools.tagger.analyzer.config.ScannerConfig;
+import at.favre.tools.tagger.analyzer.metadata.MetaDataParser;
+import at.favre.tools.tagger.analyzer.worker.*;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 

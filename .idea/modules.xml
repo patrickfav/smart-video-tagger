@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/smart-tagger.iml" filepath="$PROJECT_DIR$/smart-tagger.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tagger.iml" filepath="$PROJECT_DIR$/tagger.iml" />
     </modules>
   </component>
 </project>
-
