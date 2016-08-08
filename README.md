@@ -12,13 +12,15 @@ the extrapolate the correct values for e.g. title.
 Use the `extensions.txt` to configure which files to examine and the `ignore-words.txt`
 to set which words in filenames will be ignored (ie. never have any meaning).
 
-You need ffmpeg to use the metadata reading feature. 
+You need ffmpeg to use the metadata reading feature.
+ 
+ There are stubs for a JavaFX (some old version) UI, altough they were never finished.
 
 ## Build
 
 Use maven (3.1+) to create a jar
 
-    mvn clean build
+    mvn clean package
 
 There is no user interface, the correct way to start the tagger can be seen in `Start.java`
 
