@@ -28,7 +28,7 @@ public class FileAnalyzer {
 
 	public FileAnalyzer(FolderInfo rootFolder, ScannerConfig config) {
 		this.rootFolder = rootFolder;
-		analyzers = new ArrayList<IAnalyzer>();
+		analyzers = new ArrayList<>();
 		analyzers.add(new DateAnalyzer());
 		analyzers.add(new TitlePathAnalyzer());
 		analyzers.add(new SeasonEpisodeAnalyser());

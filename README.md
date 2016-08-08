@@ -26,7 +26,7 @@ There is no user interface, the correct way to start the tagger can be seen in `
 
 ## Tech Stack
 
-* Java 1.6
+* Java 7
 * Maven
 * Log4j
 
